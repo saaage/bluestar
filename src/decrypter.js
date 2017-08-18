@@ -1,22 +1,20 @@
-// Decrypter will accept a txt file
 import React from 'react'
-// var fs = require('fs')
+import _ from 'lodash'
+import plain from './plain.txt'
+import { calculateQuadrams } from './Quadgrams'
 
 class Decrypter extends React.Component {
 
-  constructor(props) {
-    super(props)
-    this.handleChange = this.handleChange.bind(this)
-  }
-
-  handleChange() {
-    // const userFile = fs.readFile(this.file)
-  }
-
   render() {
+
+    // Use plain.txt as a base to find quadgrams, then calculate probability of
+    //   occurence
+    calculateQuadrams(plain)
+
     return (
+
       <div>
-        <input ref={(node) => { this.file = node }} type="file" accept="text/*" onChange={this.handleChange}/>
+        <p>hello :)</p>
       </div>
     )
   }
