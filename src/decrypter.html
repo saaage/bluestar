@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <input type='file' accept='text/*' onchange='openFile(event)'><br>
+    <script>
+      var openFile = function(event) {
+        var input = event.target;
+
+        var reader = new FileReader();
+        reader.onload = function(){
+          var dataURL = reader.result;
+          var output = document.getElementById('output');
+          output.src = dataURL;
+        };
+        reader.readAsText(input.files[0]);
+      };
+    </script>
+  </body>
+</html>
