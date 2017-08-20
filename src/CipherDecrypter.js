@@ -6,7 +6,10 @@ export default class CipherDecrypter {
     this.base = base.toUpperCase()
     this.quadgramStats = this.getQuadgramStats()
     this.sayHello()
-    console.log(CipherDecrypter.extractQuadgrams('IN a 343432world where Zombies'))
+    console.log('English:')
+    this.checkFitness('Applebees has good steak and eggs')
+    console.log('Gibberish:')
+    this.checkFitness('ADKSLELNCS SOS IIFI LLSKF OAJ FJSL')
   }
 
   // Let user know they have successfuly created a new CipherDecrypter
@@ -46,7 +49,7 @@ export default class CipherDecrypter {
     let quadgramStats = {}
 
     // Take a large sample of this.base, store in 'sampleText'
-    for(let i = 0; i < 100000; i++) {
+    for(let i = 0; i < 2000000; i++) {
       sampleText = sampleText + this.base[i]
     }
 
@@ -96,11 +99,26 @@ export default class CipherDecrypter {
 
   // calculates fitness (log probability) of text using this.quadgramStats
   checkFitness(text) {
-    let q = input.toUpperCase()
-    if(_.has(this.quadgramStats, q)) {
-      return this.quadgramStats[q]
-    }else {
-      return -9.4
-    }
+    let qArray= []
+    let score = 0
+
+    // remove numbers and whitespace from text
+    text = CipherDecrypter.removeNums(CipherDecrypter.compress(text))
+
+    // extract quadgrams from text
+    qArray = CipherDecrypter.extractQuadgrams(text)
+
+    // get sum of quadgrams by pulling values from this.quadgramStats
+    qArray.forEach((q) => {
+      if(this.quadgramStats[q] != undefined ) {
+        // console.log(`${q}: ${this.quadgramStats[q]}`)
+        score += this.quadgramStats[q]
+      }else {
+        // console.log(`${q}: -9.4`)
+        score -= 9.4
+      }
+    })
+
+    console.log(score)
   }
 }
