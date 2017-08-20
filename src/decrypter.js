@@ -7,16 +7,9 @@ class Decrypter extends React.Component {
 
   render() {
 
-    let shakespeare = new CipherDecrypter(plain)
-    // shakespeare.decrypt('encrypted.txt')
-    // shakespeare.getKeys()
-    // shakespeare.checkProbability('skks')
-
-    // Use plain.txt as a base to find quadgrams, then calculate probability of
-    //   occurence
+    let Shakespeare = new CipherDecrypter(plain)
 
     return (
-
       <div>
         <p>Fancy React UI</p>
       </div>
