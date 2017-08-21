@@ -37,6 +37,7 @@ export default class CipherDecrypter {
     return qArray
   }
 
+  // utility function that replaces character at a given index
   static replaceAt(string, replacement, pos) {
     return `${string.substr(0, pos)}${replacement}${string.substr(pos + replacement.length)}`
   }
@@ -79,7 +80,7 @@ export default class CipherDecrypter {
     let quadgramStats = {}
 
     // Take a large sample of this.base, store in 'sampleText'
-    for(let i = 0; i < 2000000; i++) {
+    for(let i = 0; i < this.base.length; i++) {
       sampleText = sampleText + this.base[i]
     }
 
@@ -141,53 +142,35 @@ export default class CipherDecrypter {
     // get sum of quadgrams by pulling values from this.quadgramStats
     qArray.forEach((q) => {
       if(this.quadgramStats[q] != undefined) {
-        // console.log(`${q}: ${this.quadgramStats[q]}`)
         score += this.quadgramStats[q]
       }else {
-        // console.log(`${q}: -9.4`)
+        // return Math.log(Math.floor(0/this.totalQuadgramCount))/Math.log(10)
         score -= 9.4
       }
     })
 
-    console.log(score)
+    return score
   }
 
-  // a function that tests multiple cipher keys on encrypted seeking the best
-  //   fitness score possible
-  decrypt() {
-    let toDecrypt = CipherDecrypter.compress(this.encrypted)
-    let currentText = ''
+  // returns new text after replacing letters using a given key
+  swapLetters(key, text) {
+    let currentText = text
     let actionText = ''
-    let cipherKey = {}
-    let solvedE = this.findE()
-    let unassignedKeys = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-    let alphabet = 'FGHIWXYZQRULABJKOPSTCDMNV'
+    let cipherKey = key
     let charIndexes = {}
-
-    // Add our known value of 'E' to cipherKey
-    cipherKey[solvedE] = 'E'
-
-    // Remove solvedE from unassignedKeys
-    unassignedKeys = unassignedKeys.replace(solvedE, "")
-
-    // for each letter in unassignedKeys, assign a random letter from alphabet
-    for (let char in unassignedKeys){
-        cipherKey[unassignedKeys[char]] = alphabet[char]
-    }
 
     // for each letter in CipherKey, create an array of indexes where they occur
     for (let char in cipherKey) {
       let indexes = []
-      for (let ch in toDecrypt ) {
-        if (toDecrypt[ch] == char) {
+      for (let ch in text ) {
+        if (text[ch] == char) {
           indexes.push(ch)
         }
       }
       charIndexes[char] = indexes
     }
 
-    currentText = toDecrypt
-    // for each letter in charIndexes insert that letter into correct toDecrypt indexes
+    // for each letter in charIndexes insert that letter into correct text indexes
     for (let key in charIndexes) {
       // for every index, replace character with its cipherKey value
       for (let i = 0; i < charIndexes[key].length; i++) {
@@ -197,13 +180,116 @@ export default class CipherDecrypter {
       }
     }
 
-    console.log(currentText)
+    return currentText
+  }
 
-    // for every character in cipherKey, get indexes that need to be filled by that letter
-    // for (let i=0; i < 26; i++) {
-    //   re = new RegExp(`${alphabet[i]}`, 'g')
-    //   toEncrypt = toEncrypt.replace(re, cipherKey[alphabet[i]])
-    // }
+  // generates a new cipher key
+  initialCipherKey() {
+    const solvedE = this.findE()
+    let unassignedKeys = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    let alphabet = 'FGHRULABJKOPSTCDMNVIWXYZQ'
+    let key = {}
+
+    // Add our known value of 'E' to cipherKey
+    key[solvedE] = 'E'
+
+    // Remove solvedE from unassignedKeys
+    unassignedKeys = unassignedKeys.replace(solvedE, "")
+
+    // for each letter in unassignedKeys, assign a random letter from alphabet
+    for (let char in unassignedKeys){
+        key[unassignedKeys[char]] = alphabet[char]
+    }
+
+    return key
+  }
+
+  // swap 2 characters in a given cipher key
+  nextCipherKey(k) {
+    let nextKey = k
+    let currentEKey = Object.keys(nextKey).find(key => nextKey[key] === 'E')
+    let unassigned = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    let alpha = 'FGHIWXYZQRULABJKOPSTCDMNV'
+
+    // keep current key for 'E'
+    nextKey[currentEKey] = 'E'
+
+    // Remove currentEKey from unassigned
+    unassigned = unassigned.replace(currentEKey, "")
+
+    // function to randomly select a letter from alphabet
+    let randomLetter = () => {
+      return alpha[Math.floor(Math.random() * alpha.length)]
+    }
+
+    // select random letter from alpha
+    let random1 = randomLetter()
+    // get key for first random letter
+    let random1Key = Object.keys(nextKey).find(key => nextKey[key] === random1)
+
+    // select random letter from alpha
+    let random2 = randomLetter()
+    // get key for second random letter
+    let random2Key = Object.keys(nextKey).find(key => nextKey[key] === random2)
+
+    nextKey[random2Key] = random1
+    nextKey[random1Key] = random2
+
+    return nextKey
+  }
+
+  // test cipher keys on encrypted seeking the best fitness score possible
+  decrypt() {
+    let toDecrypt = CipherDecrypter.compress(this.encrypted)
+    let currentCipherText = ''
+    let nextCipherText = ''
+    let cipherKey = {}
+    let nextKey = {}
+    let currentScore = 0
+    let nextCipherScore = 0
+
+    // get initial cipher key
+    cipherKey = this.initialCipherKey()
+
+    // copy current cipherKey to pass to this.nextKey() to be modified
+    nextKey = this.nextCipherKey(Object.assign({}, cipherKey))
+
+    // swap letters using current key
+    currentCipherText = this.swapLetters(cipherKey, toDecrypt)
+    // swap letters using possible next key
+    nextCipherText = this.swapLetters(nextKey, toDecrypt)
+
+    let failures = 0
+
+    while(failures < 1000 ) {
+      // currentScore is meassured by checking the fitness of toDecrypt with currentCipher
+      currentScore = this.checkFitness(currentCipherText)
+      // nextCipherscore is measured by checking the fitness of toDecrypt with nextCipher
+      nextCipherScore = this.checkFitness(nextCipherText)
+
+      // if currentScore is stronger than nextCipherScore, keep currentCipher
+      // pass a copy of cipherKey to nextCipherKey so a new key can be generated
+      // increment failures count
+      if (currentScore >= nextCipherScore) {
+        console.log(`keeping current cipher ${currentScore}`)
+        nextKey = this.nextCipherKey(Object.assign({}, cipherKey))
+        failures += 1
+      }
+      // if currentScore <= nextCipherScore, replace cipherKey with a copy of nextKey
+      // replace nextKey with a key generated from nextCipherKey
+      // display the key in the new cipherKey in the console
+      // reset failure count
+      else if (currentScore <= nextCipherScore){
+        console.log(`replacing current cipher with next one ${nextCipherScore}`)
+        cipherKey = Object.assign({}, nextKey)
+        nextKey = this.nextCipherKey(Object.assign({}, nextKey))
+        console.log(cipherKey)
+        failures = 0
+      }
+      // after each scoring result, update currentCipherText and nextCipherText
+      currentCipherText = this.swapLetters(cipherKey, toDecrypt)
+      nextCipherText = this.swapLetters(nextKey, toDecrypt)
+    }
   }
 
 }
