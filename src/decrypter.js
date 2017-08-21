@@ -1,13 +1,13 @@
 import React from 'react'
 import _ from 'lodash'
-import plain from './plain.txt'
+import encrypted from './encrypted.txt'
 import CipherDecrypter from './CipherDecrypter'
 
 class Decrypter extends React.Component {
 
   render() {
 
-    let Shakespeare = new CipherDecrypter(plain)
+    let Encrypted = new CipherDecrypter(encrypted)
 
     return (
       <div>
