@@ -7,14 +7,6 @@ export default class CipherDecrypter {
     this.base = plain.toUpperCase()
     this.encrypted = encrypted
     this.quadgramStats = this.getQuadgramStats()
-    this.sayHello()
-    this.decrypt()
-  }
-
-  // Let user know they have successfuly created a new CipherDecrypter
-  sayHello() {
-    console.log(`You have provided a new encypted text that is`
-                + ` ${this.encrypted.length} characters long`)
   }
 
   // utility function that removes whitespace and numbers from a string
@@ -42,8 +34,8 @@ export default class CipherDecrypter {
     return `${string.substr(0, pos)}${replacement}${string.substr(pos + replacement.length)}`
   }
 
-  // a utility function to find the most used character which has a strong
-  //   chance of being our key for 'E'
+  // a function to find the most used character which has a strong chance of
+  //   being our key for 'E'
   findE() {
     let text = CipherDecrypter.compress(this.encrypted)
 
@@ -239,11 +231,12 @@ export default class CipherDecrypter {
   }
 
   // test cipher keys on encrypted seeking the best fitness score possible
-  decrypt() {
+  findBestKey() {
     let toDecrypt = CipherDecrypter.compress(this.encrypted)
+    let cipherKey = {}
     let currentCipherText = ''
     let nextCipherText = ''
-    let cipherKey = {}
+    let failures = 0
     let nextKey = {}
     let currentScore = 0
     let nextCipherScore = 0
@@ -258,8 +251,6 @@ export default class CipherDecrypter {
     currentCipherText = this.swapLetters(cipherKey, toDecrypt)
     // swap letters using possible next key
     nextCipherText = this.swapLetters(nextKey, toDecrypt)
-
-    let failures = 0
 
     while(failures < 1000 ) {
       // currentScore is meassured by checking the fitness of toDecrypt with currentCipher
@@ -290,6 +281,12 @@ export default class CipherDecrypter {
       currentCipherText = this.swapLetters(cipherKey, toDecrypt)
       nextCipherText = this.swapLetters(nextKey, toDecrypt)
     }
+
+    return cipherKey
+  }
+
+  solve() {
+    return null
   }
 
 }
