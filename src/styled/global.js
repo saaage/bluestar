@@ -11,6 +11,7 @@ const global = injectGlobal`
   }
 
   #root [data-reactroot] {
+    margin: 0px;
     height: 100vh;
   }
 `

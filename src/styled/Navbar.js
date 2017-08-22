@@ -6,9 +6,11 @@ const Navbar = styled(Nav)`
   background-color: #007EE1;
   height: 70px;
   position: fixed;
+  top: 0;
   width: 100%;
+  z-index: 100;
 
-  a {
+  #logo {
     color: white;
     font-family: 'Open Sans';
     margin-left: 1em;
@@ -16,11 +18,17 @@ const Navbar = styled(Nav)`
     position: absolute;
   }
 
-  #hamburger {
-    display: inline;
-    float: right;
-    margin-right: 1em;
-    margin-top: 1.5em;
+  ul {
+    background-color: #007EE1;
+    color: white;
+    font-family: 'Open Sans';
+    height: 100vh;
+    list-style-type: none;
+    margin: 0px;
+    a {
+      text-decoration: none;
+      color: white;
+    }
   }
 `
 
