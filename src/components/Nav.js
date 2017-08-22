@@ -9,6 +9,7 @@ class Nav extends React.Component {
     super(props)
     this.handleClick = this.handleClick.bind(this)
     this.updateDisplay = this.updateDisplay.bind(this)
+    this.hideLinks = this.hideLinks.bind(this)
   }
 
   componentDidMount() {
@@ -39,8 +40,15 @@ class Nav extends React.Component {
     }
   }
 
-  // What links do you want to add. Do we need React Router?
-
+  hideLinks() {
+    let links = this.links
+    if(window.innerWidth < 1023) {
+      links.style.display = 'none'
+    } else {
+      null
+    }
+  }
+  
   render(){
     const noDisplay = { display: 'none'}
 
@@ -50,9 +58,9 @@ class Nav extends React.Component {
         <a id="logo">Blue Star Decrypter</a>
         <span onClick={this.handleClick}><MenuIcon /></span>
         <Links style={noDisplay} innerRef={(links) => { this.links = links}}>
-          <li><Link to="/">How To Use</Link></li>
-          <li><Link to="/tools">Additional Tools</Link></li>
-          <li>
+          <li onClick={this.hideLinks}><Link to="/">How To Use</Link></li>
+          <li onClick={this.hideLinks}><Link to="/tools">Additional Tools</Link></li>
+          <li onClick={this.hideLinks}>
             <a href="https://gist.github.com/Sage911/293240809b1cc0de8d6b7c2ab2f936ce" target="_blank">Github</a>
           </li>
         </Links>
