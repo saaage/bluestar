@@ -18,17 +18,10 @@ const Navbar = styled(Nav)`
     position: absolute;
   }
 
-  ul {
-    background-color: #007EE1;
-    color: white;
-    font-family: 'Open Sans';
+  @media (min-width: 1023px) {
+    position: fixed;
+    width: 242px;
     height: 100vh;
-    list-style-type: none;
-    margin: 0px;
-    a {
-      text-decoration: none;
-      color: white;
-    }
   }
 `
 
