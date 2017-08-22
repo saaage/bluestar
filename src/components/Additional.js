@@ -50,7 +50,7 @@ const Additional = props =>
       <li>
         <h2>Decrypter.<span>solve()</span></h2>
         <h3>Returns: <em>String</em></h3>
-        <p>Returns encrypted version of provided text.</p>
+        <p>Returns decrypted version of provided text.</p>
       </li>
 
     </ul>
