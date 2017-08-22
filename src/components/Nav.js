@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import Logo from 'styled/Logo'
 import MenuIcon from 'styled/Menu'
 import Links from 'styled/Links'
@@ -36,6 +37,8 @@ class Nav extends React.Component {
     }
   }
 
+  // What links do you want to add. Do we need React Router?
+
   render(){
     const noDisplay = { display: 'none'}
 
@@ -45,10 +48,10 @@ class Nav extends React.Component {
         <a id="logo">Blue Star Decrypter</a>
         <span onClick={this.handleClick}><MenuIcon /></span>
         <Links style={noDisplay} innerRef={(links) => { this.links = links}}>
-          <li>How To Use</li>
-          <li>Additional Tools</li>
+          <li><Link to="/">How To Use</Link></li>
+          <li><Link to="/tools">Additional Tools</Link></li>
           <li>
-            <a href="https://github.com/Sage911/bluestar" target="_blank">Github</a>
+            <a href="https://gist.github.com/Sage911/293240809b1cc0de8d6b7c2ab2f936ce" target="_blank">Github</a>
           </li>
         </Links>
       </nav>

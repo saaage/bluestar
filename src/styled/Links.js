@@ -8,9 +8,23 @@ const Links = styled.ul`
   height: 100vh;
   list-style-type: none;
   margin: 0px;
+  padding-top: 1em;
+
+  li:nth-child(2){
+    padding-left: 1em;
+  }
+
+  li:nth-child(3){
+    margin-top: .75em;
+  }
+
   a {
     text-decoration: none;
     color: white;
+  }
+
+  @media (min-width: 1023px) {
+    margin-top: 1em;
   }
 `
 
