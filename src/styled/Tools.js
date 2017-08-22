@@ -31,6 +31,7 @@ const Tools = styled(Additional)`
   margin-left: 1em;
   margin-right: 1em;
   margin-top: 5.375em;
+
   @media (min-width: 1023px) {
     margin-top: 3em;
     margin-left: 300px;

@@ -19,13 +19,13 @@ const Additional = props =>
 
       <li>
         <h2>Decrypter.<span>checkFitness(text)</span></h2>
-        <h3>Returns: <em>Object</em></h3>
+        <h3>Returns: <em>Number</em></h3>
         <p>Returns a fitness score of text by referencing this.quadgramStats</p>
       </li>
 
       <li>
         <h2>Decrypter.<span>swapLetters(key, text)</span></h2>
-        <h3>Returns: <em>Object</em></h3>
+        <h3>Returns: <em>String</em></h3>
         <p>Returns new text after replacing letters using a given key.</p>
       </li>
 
