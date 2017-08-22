@@ -13,10 +13,12 @@ class Nav extends React.Component {
 
   componentDidMount() {
     window.addEventListener("resize", this.updateDisplay)
+    window.addEventListener("load", this.updateDisplay)
   }
 
   componentWillUnmount() {
     window.removeEventListener("resize", this.updateDisplay)
+    window.removeEventListener("load", this.updateDisplay)
   }
 
   updateDisplay() {
