@@ -136,7 +136,6 @@ export default class CipherDecrypter {
       if(this.quadgramStats[q] != undefined) {
         score += this.quadgramStats[q]
       }else {
-        // return Math.log(Math.floor(0/this.totalQuadgramCount))/Math.log(10)
         score -= 9.4
       }
     })
@@ -274,7 +273,6 @@ export default class CipherDecrypter {
         console.log(`replacing current cipher with next one ${nextCipherScore}`)
         cipherKey = Object.assign({}, nextKey)
         nextKey = this.nextCipherKey(Object.assign({}, nextKey))
-        console.log(cipherKey)
         failures = 0
       }
       // after each scoring result, update currentCipherText and nextCipherText
@@ -286,7 +284,9 @@ export default class CipherDecrypter {
   }
 
   solve() {
-    return null
+    let encryptedText = this.encrypted.toUpperCase()
+    let answer = this.findBestKey()
+    let solvedText = this.swapLetters(answer, encryptedText)
+    return solvedText
   }
-
 }
