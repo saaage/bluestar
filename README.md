@@ -29,3 +29,4 @@ Run the app in a local server:
 ```
 $ npm run dev
 ```
+Visit [LocalHost](http://localhost:8080)
